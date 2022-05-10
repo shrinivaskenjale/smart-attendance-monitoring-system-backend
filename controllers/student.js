@@ -99,7 +99,12 @@ const getStudentRecords = async (req, res, next) => {
         faculty: facultyId,
       });
     }
-    res.json({ message: "Fetched records.", type: "single", records });
+    res.json({
+      message: "Fetched records.",
+      type: "single",
+      records,
+      conductedLecturesCount,
+    });
   } catch (error) {
     next(error);
   }
