@@ -69,7 +69,7 @@ app.use(errorController.get404);
 
 // error handling middleware
 app.use((error, req, res, next) => {
-  console.log(error);
+  console.log(error.message);
   const statusCode = error.statusCode || 500;
   const message = error.message;
   res.status(statusCode).json({ message: message });

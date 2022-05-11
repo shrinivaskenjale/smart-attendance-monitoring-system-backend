@@ -51,7 +51,6 @@ const markAttendance = async (req, res, next) => {
   //   add person to present list
   attendance.present.push(user._id);
   const result = await attendance.save();
-  // console.log(result);
   res.json({
     userName: user.name,
   });

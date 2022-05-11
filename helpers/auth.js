@@ -29,5 +29,3 @@ module.exports = {
   generateToken,
   verifyToken,
 };
-
-// hashPassword("admin").then((pw) => console.log(pw));

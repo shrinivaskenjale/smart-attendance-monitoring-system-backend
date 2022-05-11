@@ -4,7 +4,6 @@ const nodemailer = require("nodemailer");
 // creating and configuring transporter for SMTP server
 const transporter = nodemailer.createTransport({
   service: process.env.EMAIL_SERVICE,
-  // secure: true,
   auth: {
     user: process.env.EMAIL_USERNAME,
     pass: process.env.EMAIL_PASSWORD,
@@ -32,10 +31,10 @@ const sendAttendanceCreationAlert = (email, name, attendanceId) => {
 
   transporter
     .sendMail({
-      from: "Smart Attendance Monitoring System", // sender address
-      to: email, // list of receivers
-      subject: "New attendance created", // Subject line
-      text: text, // plain text body
+      from: "Smart Attendance Monitoring System",
+      to: email,
+      subject: "New attendance created",
+      text: text,
       html: html,
     })
     .then((info) => {
@@ -66,10 +65,10 @@ const sendResetLink = (email, link) => {
 
   transporter
     .sendMail({
-      from: "Smart Attendance Monitoring System", // sender address
-      to: email, // list of receivers
-      subject: "Reset your password", // Subject line
-      text: text, // plain text body
+      from: "Smart Attendance Monitoring System",
+      to: email,
+      subject: "Reset your password",
+      text: text,
       html: html,
     })
     .then((info) => {

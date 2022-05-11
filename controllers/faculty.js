@@ -346,7 +346,6 @@ const updateAttendanceRecord = async (req, res, next) => {
       }
     });
 
-    // console.log(typeof record.present[0]);
     record.present = updatedPresent;
     const result = await record.save();
     res.status(200).json({ message: "Updated record." });
