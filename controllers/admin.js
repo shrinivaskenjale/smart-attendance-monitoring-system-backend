@@ -4,6 +4,7 @@ const User = require("../models/user");
 
 // import helpers
 const { hashPassword } = require("../helpers/auth");
+const { sendRegistrationMail } = require("../helpers/email");
 
 // ====================================
 // CREATE NEW PERSON
@@ -71,6 +72,11 @@ const addNewUser = async (req, res, next) => {
       message: "User created.",
       userId: result._id,
     });
+    sendRegistrationMail(
+      email,
+      password,
+      `${process.env.FRONTEND_BASE_URL}/reset-password`
+    );
   } catch (error) {
     next(error);
   }
