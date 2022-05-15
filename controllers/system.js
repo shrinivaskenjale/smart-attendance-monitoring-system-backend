@@ -3,7 +3,7 @@ const Attendance = require("../models/attendance");
 const User = require("../models/user");
 
 // import helpers
-const email = require("../helpers/email");
+const { sendAttendanceCreationAlert } = require("../helpers/email");
 
 // ====================================
 // CREATE NEW ATTENDANCE RECORD
@@ -21,13 +21,18 @@ const createNewAttendance = async (req, res, next) => {
   });
   const result = await newAttendance.save();
 
+  // sending email
+  const info = await sendAttendanceCreationAlert(
+    user.email,
+    user.name,
+    result._id
+  );
+
   //   sending response
   res.json({
     attendanceId: result._id,
     facultyName: user.name,
   });
-  // sending email
-  email.sendAttendanceCreationAlert(user.email, user.name, result._id);
 };
 
 // ====================================

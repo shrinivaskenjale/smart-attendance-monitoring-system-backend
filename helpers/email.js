@@ -29,18 +29,13 @@ const sendAttendanceCreationAlert = (email, name, attendanceId) => {
 </div>
 </body>`;
 
-  transporter
-    .sendMail({
-      from: "Smart Attendance Monitoring System",
-      to: email,
-      subject: "New attendance created",
-      text: text,
-      html: html,
-    })
-    .then((info) => {
-      console.log({ info });
-    })
-    .catch(console.error);
+  return transporter.sendMail({
+    from: "Smart Attendance Monitoring System",
+    to: email,
+    subject: "New attendance created",
+    text: text,
+    html: html,
+  });
 };
 
 // ====================================
@@ -63,21 +58,14 @@ const sendResetLink = (email, link) => {
 </div>
 </body>`;
 
-  transporter
-    .sendMail({
-      from: "Smart Attendance Monitoring System",
-      to: email,
-      subject: "Reset your password",
-      text: text,
-      html: html,
-    })
-    .then((info) => {
-      console.log({ info });
-    })
-    .catch(console.error);
+  return transporter.sendMail({
+    from: "Smart Attendance Monitoring System",
+    to: email,
+    subject: "Reset your password",
+    text: text,
+    html: html,
+  });
 };
 
 // exports
 module.exports = { sendAttendanceCreationAlert, sendResetLink };
-
-// add try catch in email functions

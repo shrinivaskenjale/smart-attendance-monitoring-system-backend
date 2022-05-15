@@ -71,7 +71,11 @@ app.use(errorController.get404);
 app.use((error, req, res, next) => {
   console.log(error.message);
   const statusCode = error.statusCode || 500;
-  const message = error.message;
+  let message = "Internal server error.";
+  if (statusCode < 500) {
+    message = error.message;
+  }
+
   res.status(statusCode).json({ message: message });
 });
 

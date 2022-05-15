@@ -82,7 +82,7 @@ const resetRequestHandler = async (req, res, next) => {
     }
 
     const link = `${process.env.FRONTEND_BASE_URL}/reset-password/${user._id}/${token.token}`;
-    await sendResetLink(user.email, link);
+    const info = await sendResetLink(user.email, link);
 
     res.status(200).json({
       message: "Password reset link has been sent to your email address.",
