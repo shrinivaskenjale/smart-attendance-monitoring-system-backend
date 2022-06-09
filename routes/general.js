@@ -14,6 +14,7 @@ router.get(
   generalController.getUserDetails
 );
 router.get("/get-faculty", protectRoute, generalController.getFaculty);
+router.get('/get-classes',protectRoute, generalController.getDivisions)
 
 // exports
 module.exports = router;

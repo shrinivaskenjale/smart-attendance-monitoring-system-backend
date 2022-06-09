@@ -12,7 +12,8 @@ const { sendRegistrationMail } = require("../helpers/email");
 
 const addNewUser = async (req, res, next) => {
   try {
-    let { name, rollNumber, type, imageUrl, email, password } = req.body;
+    let { name, rollNumber, type, imageUrl, email, division, password } =
+      req.body;
 
     if (req.user.type !== "admin") {
       const error = new Error("You are not authorized to perform this action.");
@@ -64,6 +65,7 @@ const addNewUser = async (req, res, next) => {
         email,
         type,
         password: hashedPassword,
+        division,
       });
     }
 
@@ -114,7 +116,7 @@ const deleteUser = async (req, res, next) => {
 const updateUser = async (req, res, next) => {
   try {
     const { userId } = req.params;
-    let { name, rollNumber, imageUrl, email } = req.body;
+    let { name, rollNumber, imageUrl, email, division } = req.body;
 
     if (req.user.type !== "admin") {
       const error = new Error("You are not authorized to perform this action.");
@@ -151,6 +153,7 @@ const updateUser = async (req, res, next) => {
     user.email = email;
     if (user.type === "student") {
       user.rollNumber = rollNumber;
+      user.division = division;
     }
 
     const result = await user.save();

@@ -19,6 +19,11 @@ const userSchema = new Schema(
     rollNumber: {
       type: Number,
     },
+    division: {
+      type: Schema.Types.ObjectId,
+      ref: "Division",
+
+    },
     type: {
       type: String,
       required: true,

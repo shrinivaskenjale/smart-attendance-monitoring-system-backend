@@ -1,5 +1,6 @@
 // import models
 const User = require("../models/user");
+const Division = require('../models/division')
 
 // import helpers
 
@@ -60,4 +61,24 @@ const getUserDetails = async (req, res, next) => {
   }
 };
 
-module.exports = { getStudents, getFaculty, getUserDetails };
+
+// ====================================
+// GET ALL STUDENTS
+// ====================================
+const getDivisions = async (req, res, next) => {
+  try {
+    const divisions = await Division.find().sort("division");
+
+    if (!divisions) {
+      const error = new Error("Class record does not exist.");
+      error.statusCode = 404;
+      throw error;
+    }
+
+    res.status(200).json({ message: "Fetched classes.", divisions });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { getStudents, getFaculty, getUserDetails, getDivisions };
