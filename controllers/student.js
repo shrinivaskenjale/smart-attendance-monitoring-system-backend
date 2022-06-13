@@ -12,7 +12,7 @@ const email = require("../helpers/email");
 const getStudentRecords = async (req, res, next) => {
   try {
     const { studentId } = req.params;
-    const { date1, date2, subjectId } = req.body;
+    const { date1, date2, subjectId, divisionId } = req.body;
 
     if (req.user.type !== "student") {
       const error = new Error("You are not authorized to perform this action.");
@@ -33,10 +33,12 @@ const getStudentRecords = async (req, res, next) => {
     if (!date2 && !date1) {
       records = await Attendance.find({
         subjectId: subjectId,
+        divisionId: divisionId,
         present: studentId,
       }).sort("-createdAt");
       conductedLecturesCount = await Attendance.countDocuments({
         subjectId: subjectId,
+        divisionId: divisionId,
       });
     } else if (!date2) {
       const date = new Date(date1);
@@ -51,6 +53,7 @@ const getStudentRecords = async (req, res, next) => {
           ),
         },
         subjectId: subjectId,
+        divisionId: divisionId,
         present: studentId,
       }).sort("-createdAt");
       conductedLecturesCount = await Attendance.countDocuments({
@@ -63,6 +66,7 @@ const getStudentRecords = async (req, res, next) => {
           ),
         },
         subjectId: subjectId,
+        divisionId: divisionId,
       });
     } else {
       const fromDate1 = new Date(date1);
@@ -81,6 +85,7 @@ const getStudentRecords = async (req, res, next) => {
           ),
         },
         subjectId: subjectId,
+        divisionId: divisionId,
         present: studentId,
       }).sort("-createdAt");
       conductedLecturesCount = await Attendance.countDocuments({
@@ -97,6 +102,7 @@ const getStudentRecords = async (req, res, next) => {
           ),
         },
         subjectId: subjectId,
+        divisionId: divisionId,
       });
     }
     res.json({

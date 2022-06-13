@@ -128,6 +128,7 @@ const getRecords = async (req, res, next) => {
     }
     studentsCount = await User.countDocuments({
       type: "student",
+      division: divisionId,
     });
 
     res.status(200).json({
@@ -176,6 +177,8 @@ const getStudentRecords = async (req, res, next) => {
       }).sort("-createdAt");
       conductedLecturesCount = await Attendance.countDocuments({
         faculty: facultyId,
+        divisionId: divisionId,
+        subjectId: subjectId,
       });
     } else if (!date2) {
       const date = new Date(date1);
@@ -291,6 +294,7 @@ const getAttendanceRecord = async (req, res, next) => {
 
       const allStudents = await User.find({
         type: "student",
+        division: record.divisionId,
       }).sort("rollNumber");
 
       if (!allStudents) {
