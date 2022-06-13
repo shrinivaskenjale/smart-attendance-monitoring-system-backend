@@ -1,6 +1,10 @@
 // import models
 const Attendance = require("../models/attendance");
 const User = require("../models/user");
+const Token = require("../models/token");
+
+// core packages
+const crypto = require("crypto");
 
 // import helpers
 const { sendAttendanceCreationAlert } = require("../helpers/email");
@@ -21,11 +25,21 @@ const createNewAttendance = async (req, res, next) => {
   });
   const result = await newAttendance.save();
 
+  // configure link
+
+  const token = await new Token({
+    attendanceId: result._id,
+    token: crypto.randomBytes(32).toString("hex"),
+  }).save();
+
+  const link = `${process.env.FRONTEND_BASE_URL}/configure/${result._id}/${token.token}`;
+
   // sending email
   const info = await sendAttendanceCreationAlert(
     user.email,
     user.name,
-    result._id
+    result._id,
+    link
   );
 
   //   sending response

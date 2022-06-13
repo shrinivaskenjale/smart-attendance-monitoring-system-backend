@@ -12,7 +12,7 @@ const email = require("../helpers/email");
 const getStudentRecords = async (req, res, next) => {
   try {
     const { studentId } = req.params;
-    const { date1, date2, facultyId } = req.body;
+    const { date1, date2, subjectId } = req.body;
 
     if (req.user.type !== "student") {
       const error = new Error("You are not authorized to perform this action.");
@@ -23,7 +23,7 @@ const getStudentRecords = async (req, res, next) => {
     let records;
     let conductedLecturesCount = 0;
 
-    if (!facultyId || facultyId.length === 0) {
+    if (!subjectId || subjectId.length === 0) {
       const error = new Error("Validation failed.");
       error.statusCode = 422;
       // error.data if individual validation present
@@ -32,11 +32,11 @@ const getStudentRecords = async (req, res, next) => {
 
     if (!date2 && !date1) {
       records = await Attendance.find({
-        faculty: facultyId,
+        subjectId: subjectId,
         present: studentId,
       }).sort("-createdAt");
       conductedLecturesCount = await Attendance.countDocuments({
-        faculty: facultyId,
+        subjectId: subjectId,
       });
     } else if (!date2) {
       const date = new Date(date1);
@@ -50,7 +50,7 @@ const getStudentRecords = async (req, res, next) => {
             date.getDate() + 1
           ),
         },
-        faculty: facultyId,
+        subjectId: subjectId,
         present: studentId,
       }).sort("-createdAt");
       conductedLecturesCount = await Attendance.countDocuments({
@@ -62,7 +62,7 @@ const getStudentRecords = async (req, res, next) => {
             date.getDate() + 1
           ),
         },
-        faculty: facultyId,
+        subjectId: subjectId,
       });
     } else {
       const fromDate1 = new Date(date1);
@@ -80,7 +80,7 @@ const getStudentRecords = async (req, res, next) => {
             toDate2.getDate() + 1
           ),
         },
-        faculty: facultyId,
+        subjectId: subjectId,
         present: studentId,
       }).sort("-createdAt");
       conductedLecturesCount = await Attendance.countDocuments({
@@ -96,7 +96,7 @@ const getStudentRecords = async (req, res, next) => {
             toDate2.getDate() + 1
           ),
         },
-        faculty: facultyId,
+        subjectId: subjectId,
       });
     }
     res.json({

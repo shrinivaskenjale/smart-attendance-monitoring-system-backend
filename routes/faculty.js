@@ -8,10 +8,14 @@ const facultyController = require("../controllers/faculty");
 
 // routes
 
-router.post("/records", protectRoute, facultyController.getRecords);
+router.post(
+  "/records/faculty/:facultyId",
+  protectRoute,
+  facultyController.getRecords
+);
 
 router.post(
-  "/records/students/:studentId",
+  "/records/students/:facultyId",
   protectRoute,
   facultyController.getStudentRecords
 );
@@ -37,6 +41,11 @@ router.delete(
   "/delete-record/:attendanceId",
   protectRoute,
   facultyController.deleteRecord
+);
+
+router.post(
+  "/configure/:attendanceId/:token",
+  facultyController.configureAttendance
 );
 
 // exports

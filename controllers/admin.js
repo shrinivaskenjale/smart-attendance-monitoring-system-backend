@@ -169,13 +169,17 @@ const updateUser = async (req, res, next) => {
 // ====================================
 const clearStudents = async (req, res, next) => {
   try {
+    const { divisionId } = req.params;
     if (req.user.type !== "admin") {
       const error = new Error("You are not authorized to perform this action.");
       error.statusCode = 403;
       throw error;
     }
 
-    const result = User.deleteMany({ type: "student" });
+    const result = await User.deleteMany({
+      type: "student",
+      division: divisionId,
+    });
 
     res.status(200).json({ message: "Deleted all students." });
   } catch (error) {

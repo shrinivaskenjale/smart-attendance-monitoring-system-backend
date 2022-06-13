@@ -1,6 +1,7 @@
 // import models
 const User = require("../models/user");
-const Division = require('../models/division')
+const Division = require("../models/division");
+const Subject = require("../models/subject");
 
 // import helpers
 
@@ -9,8 +10,10 @@ const Division = require('../models/division')
 // ====================================
 const getStudents = async (req, res, next) => {
   try {
+    const { divisionId } = req.params;
     const students = await User.find({
       type: "student",
+      division: divisionId,
     }).sort("rollNumber");
 
     if (!students) {
@@ -61,13 +64,14 @@ const getUserDetails = async (req, res, next) => {
   }
 };
 
-
 // ====================================
-// GET ALL STUDENTS
+// GET ALL divisions
 // ====================================
 const getDivisions = async (req, res, next) => {
   try {
-    const divisions = await Division.find().sort("division");
+    const divisions = await Division.find()
+      .sort("division")
+      .populate("subjects");
 
     if (!divisions) {
       const error = new Error("Class record does not exist.");
@@ -81,4 +85,29 @@ const getDivisions = async (req, res, next) => {
   }
 };
 
-module.exports = { getStudents, getFaculty, getUserDetails, getDivisions };
+// ====================================
+// GET SINGLE PERSON
+// ====================================
+const getSingleDivision = async (req, res, next) => {
+  try {
+    const { divisionId } = req.params;
+
+    const division = await Division.findById(divisionId).populate("subjects");
+    if (!division) {
+      const error = new Error("Class does not exist.");
+      error.statusCode = 404;
+      throw error;
+    }
+    res.json({ message: "Fetched details.", division });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = {
+  getStudents,
+  getFaculty,
+  getUserDetails,
+  getDivisions,
+  getSingleDivision,
+};

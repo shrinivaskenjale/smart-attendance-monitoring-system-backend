@@ -9,7 +9,14 @@ const attendanceSchema = new Schema(
       ref: "User",
       required: true,
     },
-
+    divisionId: {
+      type: Schema.Types.ObjectId,
+      ref: "Division",
+    },
+    subjectId: {
+      type: Schema.Types.ObjectId,
+      ref: "Subject",
+    },
     present: [
       {
         type: Schema.Types.ObjectId,

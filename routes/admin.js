@@ -14,7 +14,11 @@ router.delete("/delete-user/:userId", protectRoute, adminController.deleteUser);
 router.post("/update-user/:userId", protectRoute, adminController.updateUser);
 
 router.delete("/clear-faculty", protectRoute, adminController.clearFaculty);
-router.delete("/clear-students", protectRoute, adminController.clearStudents);
+router.delete(
+  "/clear-students/:divisionId",
+  protectRoute,
+  adminController.clearStudents
+);
 
 // exports
 module.exports = router;

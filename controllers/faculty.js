@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 // import models
 const Attendance = require("../models/attendance");
 const User = require("../models/user");
+const Token = require("../models/token");
 
 // import helpers
 
@@ -63,7 +64,8 @@ const getRecords = async (req, res, next) => {
     let records;
     let conductedLecturesCount = 0;
     let studentsCount = 0;
-    const { date1, date2, facultyId } = req.body;
+    const { date1, date2, divisionId, subjectId } = req.body;
+    const { facultyId } = req.params;
 
     if (req.user.type !== "faculty") {
       const error = new Error("You are not authorized to perform this action.");
@@ -81,6 +83,8 @@ const getRecords = async (req, res, next) => {
     if (!date2 && !date1) {
       records = await Attendance.find({
         faculty: facultyId,
+        divisionId: divisionId,
+        subjectId: subjectId,
       }).sort("-createdAt");
       conductedLecturesCount = records.length;
     } else if (!date2) {
@@ -96,6 +100,8 @@ const getRecords = async (req, res, next) => {
           ),
         },
         faculty: facultyId,
+        divisionId: divisionId,
+        subjectId: subjectId,
       }).sort("-createdAt");
       conductedLecturesCount = records.length;
     } else {
@@ -115,6 +121,8 @@ const getRecords = async (req, res, next) => {
           ),
         },
         faculty: facultyId,
+        divisionId: divisionId,
+        subjectId: subjectId,
       }).sort("-createdAt");
       conductedLecturesCount = records.length;
     }
@@ -143,8 +151,8 @@ const getStudentRecords = async (req, res, next) => {
     let records;
     let conductedLecturesCount = 0;
 
-    const { date1, date2, facultyId } = req.body;
-    const { studentId } = req.params;
+    const { date1, date2, studentId, subjectId, divisionId } = req.body;
+    const { facultyId } = req.params;
 
     if (req.user.type !== "faculty") {
       const error = new Error("You are not authorized to perform this action.");
@@ -163,6 +171,8 @@ const getStudentRecords = async (req, res, next) => {
       records = await Attendance.find({
         faculty: facultyId,
         present: studentId,
+        divisionId: divisionId,
+        subjectId: subjectId,
       }).sort("-createdAt");
       conductedLecturesCount = await Attendance.countDocuments({
         faculty: facultyId,
@@ -181,6 +191,8 @@ const getStudentRecords = async (req, res, next) => {
         },
         faculty: facultyId,
         present: studentId,
+        divisionId: divisionId,
+        subjectId: subjectId,
       }).sort("-createdAt");
       conductedLecturesCount = await Attendance.countDocuments({
         createdAt: {
@@ -192,6 +204,8 @@ const getStudentRecords = async (req, res, next) => {
           ),
         },
         faculty: facultyId,
+        divisionId: divisionId,
+        subjectId: subjectId,
       });
     } else {
       const fromDate1 = new Date(date1);
@@ -211,6 +225,8 @@ const getStudentRecords = async (req, res, next) => {
         },
         faculty: facultyId,
         present: studentId,
+        divisionId: divisionId,
+        subjectId: subjectId,
       }).sort("-createdAt");
       conductedLecturesCount = await Attendance.countDocuments({
         createdAt: {
@@ -226,6 +242,8 @@ const getStudentRecords = async (req, res, next) => {
           ),
         },
         faculty: facultyId,
+        divisionId: divisionId,
+        subjectId: subjectId,
       });
     }
 
@@ -388,6 +406,45 @@ const deleteRecord = async (req, res, next) => {
   }
 };
 
+// ====================================
+// CONFIGURE ATTENDANCE
+// ====================================
+const configureAttendance = async (req, res, next) => {
+  try {
+    const { divisionId, subjectId } = req.body;
+    const { attendanceId, token } = req.params;
+
+    const attendance = await Attendance.findById(attendanceId);
+
+    if (!attendance) {
+      const error = new Error("Link is invalid or expired.");
+      error.statusCode = 401;
+      throw error;
+    }
+
+    const tokenDB = await Token.findOne({
+      attendanceId: attendance._id,
+      token: token,
+    });
+    if (!tokenDB) {
+      const error = new Error("Link is invalid or expired.");
+      error.statusCode = 401;
+      throw error;
+    }
+
+    attendance.divisionId = divisionId;
+    attendance.subjectId = subjectId;
+    await attendance.save();
+    await tokenDB.delete();
+
+    res.status(200).json({
+      message: "Thank you.",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   markAttendance,
   getRecords,
@@ -395,4 +452,5 @@ module.exports = {
   getAttendanceRecord,
   updateAttendanceRecord,
   deleteRecord,
+  configureAttendance,
 };

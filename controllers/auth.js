@@ -51,6 +51,7 @@ const loginHandler = async (req, res, next) => {
         name: user.name,
         type: user.type,
         imageUrl: user.imageUrl,
+        divisionId: user.type === "student" ? user.division.toString() : null,
       },
     });
   } catch (error) {
