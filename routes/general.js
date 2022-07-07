@@ -20,6 +20,7 @@ router.get(
 router.get("/get-faculty", protectRoute, generalController.getFaculty);
 router.get("/get-classes", generalController.getDivisions);
 router.get("/get-classes/:divisionId", generalController.getSingleDivision);
+router.get("/get-subjects", generalController.getSubjects);
 
 // exports
 module.exports = router;

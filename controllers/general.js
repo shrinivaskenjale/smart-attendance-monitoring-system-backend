@@ -65,7 +65,7 @@ const getUserDetails = async (req, res, next) => {
 };
 
 // ====================================
-// GET ALL divisions
+// GET ALL CLASSES
 // ====================================
 const getDivisions = async (req, res, next) => {
   try {
@@ -80,6 +80,25 @@ const getDivisions = async (req, res, next) => {
     }
 
     res.status(200).json({ message: "Fetched classes.", divisions });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// ====================================
+// GET ALL SUBJECTS
+// ====================================
+const getSubjects = async (req, res, next) => {
+  try {
+    const subjects = await Subject.find().sort("subjectName");
+
+    if (!subjects) {
+      const error = new Error("Subject record does not exist.");
+      error.statusCode = 404;
+      throw error;
+    }
+
+    res.status(200).json({ message: "Fetched subjects.", subjects });
   } catch (error) {
     next(error);
   }
@@ -109,5 +128,6 @@ module.exports = {
   getFaculty,
   getUserDetails,
   getDivisions,
+  getSubjects,
   getSingleDivision,
 };

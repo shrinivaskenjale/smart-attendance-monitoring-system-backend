@@ -1,6 +1,8 @@
 // import models
 
 const User = require("../models/user");
+const Division = require("../models/division");
+const Subject = require("../models/subject");
 
 // import helpers
 const { hashPassword } = require("../helpers/auth");
@@ -204,10 +206,86 @@ const clearFaculty = async (req, res, next) => {
   }
 };
 
+// ====================================
+// CREATE NEW CLASS
+// ====================================
+
+const addNewDivision = async (req, res, next) => {
+  try {
+    let { subjectIds, divisionName } = req.body;
+
+    if (req.user.type !== "admin") {
+      const error = new Error("You are not authorized to perform this action.");
+      error.statusCode = 403;
+      throw error;
+    }
+
+    divisionName = divisionName.trim();
+
+    if (divisionName === "") {
+      const error = new Error("Validation failed.");
+      error.statusCode = 422;
+      // error.data if individual validation present
+      throw error;
+    }
+
+    const division = new Division({
+      divisionName: divisionName,
+      subjects: subjectIds,
+    });
+
+    const result = await division.save();
+    res.status(201).json({
+      message: "Class created.",
+      classId: result._id,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+// ====================================
+// CREATE NEW SUBJECT
+// ====================================
+
+const addNewSubject = async (req, res, next) => {
+  try {
+    let { subjectName } = req.body;
+
+    if (req.user.type !== "admin") {
+      const error = new Error("You are not authorized to perform this action.");
+      error.statusCode = 403;
+      throw error;
+    }
+
+    subjectName = subjectName.trim();
+
+    if (subjectName === "") {
+      const error = new Error("Validation failed.");
+      error.statusCode = 422;
+      // error.data if individual validation present
+      throw error;
+    }
+
+    const subject = new Subject({
+      subjectName: subjectName,
+    });
+
+    const result = await subject.save();
+    res.status(201).json({
+      message: "Subject created.",
+      subjectId: result._id,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   addNewUser,
   deleteUser,
   updateUser,
   clearFaculty,
   clearStudents,
+  addNewDivision,
+  addNewSubject,
 };

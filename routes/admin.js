@@ -10,6 +10,8 @@ const { protectRoute } = require("../middlewares/auth");
 // routes
 
 router.post("/add-user", protectRoute, adminController.addNewUser);
+router.post("/add-class", protectRoute, adminController.addNewDivision);
+router.post("/add-subject", protectRoute, adminController.addNewSubject);
 router.delete("/delete-user/:userId", protectRoute, adminController.deleteUser);
 router.post("/update-user/:userId", protectRoute, adminController.updateUser);
 
