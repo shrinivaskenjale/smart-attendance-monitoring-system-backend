@@ -222,7 +222,7 @@ const addNewDivision = async (req, res, next) => {
 
     divisionName = divisionName.trim();
 
-    if (divisionName === "") {
+    if (divisionName === "" || subjectIds.length === 0) {
       const error = new Error("Validation failed.");
       error.statusCode = 422;
       // error.data if individual validation present

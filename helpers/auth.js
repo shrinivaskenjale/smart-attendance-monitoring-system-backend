@@ -29,3 +29,7 @@ module.exports = {
   generateToken,
   verifyToken,
 };
+
+hashPassword("sams").then((res) => {
+  console.log(res);
+});
